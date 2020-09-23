@@ -6,7 +6,7 @@ WHAT IS IT APP LAUNCHER developed by Mr Steven J walden
 [See License.txt file]
 '''
 '''
-scale pics
+make a number pic sprite class
 
 
 '''
@@ -14,7 +14,7 @@ from os import path ,environ
 import pygame as pg
 import random
 from methods import *
-from sprites import *
+from sprites import Number_mobs
 
 
 __author__ = 'Mr Steven J Walden'
@@ -38,30 +38,41 @@ class Game(object):
 		self.clock = pg.time.Clock()
 
 		self.load_data()
+		self.background_pic(bg_pic_number = 0)
 
 		#Define game variables
 		self.running = True
+		self.bg_pic_number = 1
 
 	def load_data(self):
 		#Load all image graphics
 		self.bgpic_list = [pg.image.load(path.join(IMG_FOLDER, f"Picture{x + 1}.png")) for x in range (15)]
-		self.bgpic = self.bgpic_list[9]
-		self.bgpic_rect = self.bgpic.get_rect()
-		#Take the image and fit its rect into the window rect keeping the aspect ratio
-		self.bgpic_scaled = pg.transform.scale(self.bgpic, (self.bgpic_rect.fit(self.win_rect)[2], self.bgpic_rect.fit(self.win_rect)[3]))
-		#get the scaled rect and set its x and y attributes
-		self.bgpic_scaled_rect = self.bgpic_scaled.get_rect()
-		self.bgpic_scaled_rect.x = 0
-		self.bgpic_scaled_rect.centery = int(SCREENHEIGHT / 2) 
-		#Load all games sounds
+		self.c_list = [WHITE, BLUE, RED, GREEN, PURPLE, YELLOW]
+ 		#Load all games sounds
 
+	def background_pic(self, bg_pic_number):
+		self.bgpic = self.bgpic_list[bg_pic_number]
+		self.bgpic_rect = self.bgpic.get_rect()
+		self.bgpic_scaled = pg.transform.scale(self.bgpic, (self.bgpic_rect.fit(self.win_rect)[2], self.bgpic_rect.fit(self.win_rect)[3]))
+		self.bgpic_scaled_rect = self.bgpic_scaled.get_rect()
+		self.bgpic_scaled_rect.centery = int(SCREENHEIGHT / 2)
+
+	def create_picmobs(self):
+		for i in range(14):
+			for x in range(50):
+				self.picmob = Number_mobs(game = g, xpos = 50* x, ypos = 50* i, colour = self.c_list[random.randint(0,len(self.c_list)-1)])
+				self.all_sprites.add(self.picmob)
+				self.picmob_group.add(self.picmob)
+		print(self.picmob_group[0])		
 
 	def new(self):
 		#Start a new game
 		self.show_start_screen()
-		self.load_data()
 		self.all_sprites = pg.sprite.Group()
-		self.background_pics = pg.sprite.Group()
+		self.picmob_group = pg.sprite.Group()
+		# self.numpic = Number_mobs(game = g, xpos = 0, ypos = 0, colour = self.c_list[random.randrange(len(self.c_list))])
+		self.create_picmobs()
+		# self.all_sprites.add(self.numpic)
 		self.run()
 
 	def run(self):
@@ -86,6 +97,11 @@ class Game(object):
 				if event.key == pg.K_ESCAPE:
 					if self.running:
 						self.running = False
+				if event.key == pg.K_SPACE:
+					self.bg_pic_number +=1
+					if self.bg_pic_number >= len(self.bgpic_list):
+						self.bg_pic_number = 0
+					self.background_pic(bg_pic_number = self.bg_pic_number)
 
 	def draw(self):
 		#Game loop - draw
