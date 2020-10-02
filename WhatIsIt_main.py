@@ -14,7 +14,7 @@ from os import path ,environ
 import pygame as pg
 import random
 from methods import *
-from sprites import Number_mobs
+from sprites import Number_mobs, Spritesheet
 
 
 __author__ = 'Mr Steven J Walden'
@@ -47,7 +47,7 @@ class Game(object):
 	def load_data(self):
 		#Load all image graphics
 		self.bgpic_list = [pg.image.load(path.join(IMG_FOLDER, f"Picture{x + 1}.png")) for x in range (15)]
-		self.c_list = [WHITE, BLUE, RED, GREEN, PURPLE, YELLOW]
+		self.sprite_sheet = Spritesheet(path.join(IMG_FOLDER, "What_is_it_game_images.png"))
  		#Load all games sounds
 
 	def background_pic(self, bg_pic_number):
@@ -58,12 +58,12 @@ class Game(object):
 		self.bgpic_scaled_rect.centery = int(SCREENHEIGHT / 2)
 
 	def create_picmobs(self):
-		for i in range(14):
-			for x in range(50):
-				self.picmob = Number_mobs(game = g, xpos = 50* x, ypos = 50* i, colour = self.c_list[random.randint(0,len(self.c_list)-1)])
+		self.picmob_list = []
+		for i in range(8):
+			for x in range(20):
+				self.picmob = Number_mobs(game = g, xpos = 50* x, ypos = 50* i, img = x + (i * 20))
 				self.all_sprites.add(self.picmob)
-				self.picmob_group.add(self.picmob)
-		print(self.picmob_group[0])		
+				self.picmob_list.append(self.picmob)
 
 	def new(self):
 		#Start a new game
