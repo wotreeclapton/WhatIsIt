@@ -1,0 +1,15 @@
+House
+Dog
+Doctor
+Bike
+T-Shirt
+Television
+Student
+Teacher
+Bathroom
+Elephant
+Shoes
+Coffee
+Child
+Racing car
+Monkey

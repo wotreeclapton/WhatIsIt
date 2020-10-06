@@ -15,6 +15,7 @@ import pygame as pg
 import random
 from methods import *
 from sprites import Number_mobs, Spritesheet
+import time
 
 
 __author__ = 'Mr Steven J Walden'
@@ -23,13 +24,13 @@ __version__ = '1.0.0'
 class Game(object):
 	"""docstring for Game"""
 	def __init__(self):
-		#Initialize game window, etc		
+		#Initialize game window, etc
 		#set game screen placement
 		environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (COMX,COMY)
 		pg.mixer.pre_init(44100, -16, 1, 512)
 		pg.init()
 
-		#Set logo and gamescreen etc	
+		#Set logo and gamescreen etc
 		self.win = pg.display.set_mode((SCREENWIDTH,SCREENHEIGHT))
 		self.win_rect = self.win.get_rect()
 		self.logo = pg.image.load(path.join(IMG_FOLDER, 'eplogo_small.png'))
@@ -43,6 +44,8 @@ class Game(object):
 		#Define game variables
 		self.running = True
 		self.bg_pic_number = 1
+		self.iplist = []
+		self.chosen_numb = ""
 
 	def load_data(self):
 		#Load all image graphics
@@ -59,20 +62,37 @@ class Game(object):
 
 	def create_picmobs(self):
 		self.picmob_list = []
-		for i in range(8):
+		for i in range(14): #Normally 14
 			for x in range(20):
 				self.picmob = Number_mobs(game = g, xpos = 50* x, ypos = 50* i, img = x + (i * 20))
 				self.all_sprites.add(self.picmob)
 				self.picmob_list.append(self.picmob)
+
+	def read_piclist(self):
+		with open("picture_list.txt" ,"r") as file:
+			for line in file:
+				print(line[:-1])
+
+	def choose_number(self):
+		for item in self.iplist:
+			self.chosen_numb += item
+		try:
+			if int(self.chosen_numb) >= 1 and int(self.chosen_numb) <= 280:
+				# print(int(self.chosen_numb)) #remove the sprite
+				self.picmob_list[int(self.chosen_numb) - 1].kill()
+		except ValueError:
+			pass
+		self.chosen_numb = ""
+		self.iplist.clear()
 
 	def new(self):
 		#Start a new game
 		self.show_start_screen()
 		self.all_sprites = pg.sprite.Group()
 		self.picmob_group = pg.sprite.Group()
-		# self.numpic = Number_mobs(game = g, xpos = 0, ypos = 0, colour = self.c_list[random.randrange(len(self.c_list))])
 		self.create_picmobs()
-		# self.all_sprites.add(self.numpic)
+		# print(time.strftime("%M Minuets %S Seconds"))
+		self.read_piclist()
 		self.run()
 
 	def run(self):
@@ -94,6 +114,8 @@ class Game(object):
 				if self.running:
 					self.running = False
 			elif event.type == pg.KEYDOWN:
+				if event.key != pg.K_KP_ENTER or event.key != pg.K_RETURN: #add all keydown events unicode (name) to a list excpt the enterkey
+					self.iplist.append(event.unicode)
 				if event.key == pg.K_ESCAPE:
 					if self.running:
 						self.running = False
@@ -101,7 +123,11 @@ class Game(object):
 					self.bg_pic_number +=1
 					if self.bg_pic_number >= len(self.bgpic_list):
 						self.bg_pic_number = 0
+					self.all_sprites.empty()
 					self.background_pic(bg_pic_number = self.bg_pic_number)
+					self.create_picmobs()
+				if event.key == pg.K_KP_ENTER or event.key == pg.K_RETURN:
+					self.choose_number()
 
 	def draw(self):
 		#Game loop - draw
@@ -122,6 +148,7 @@ class Game(object):
 g = Game()
 
 if __name__ == '__main__':
+	# print(time.strftime("%M Minuets %S Seconds"))
 	g.new()
 
 
