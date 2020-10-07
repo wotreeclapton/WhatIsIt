@@ -24,6 +24,4 @@ MOVE_DELAY = 550
 #set up game folders
 GAME_FOLDER = path.dirname(__file__)
 IMG_FOLDER = path.join(GAME_FOLDER, 'img')
-SOUND_FOLDER = path.join(GAME_FOLDER, 'sound')
-
-SPRITESHEET = "????????.png"
+SOUND_FOLDER = path.join(GAME_FOLDER, 'snd')

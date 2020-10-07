@@ -14,7 +14,7 @@ from os import path ,environ
 import pygame as pg
 import random
 from methods import *
-from sprites import Number_mobs, Spritesheet
+from sprites import NumberMobs, Spritesheet, WrongAnswer
 import time
 
 
@@ -51,7 +51,9 @@ class Game(object):
 		#Load all image graphics
 		self.bgpic_list = [pg.image.load(path.join(IMG_FOLDER, f"Picture{x + 1}.png")) for x in range (15)]
 		self.sprite_sheet = Spritesheet(path.join(IMG_FOLDER, "What_is_it_game_images.png"))
- 		#Load all games sounds
+		#Load all games sounds
+		self.wrong_sound = pg.mixer.Sound(path.join(SOUND_FOLDER, "Wrong.wav"))
+		self.right_sound = pg.mixer.Sound(path.join(SOUND_FOLDER, "Right.wav"))
 
 	def background_pic(self, bg_pic_number):
 		self.bgpic = self.bgpic_list[bg_pic_number]
@@ -64,7 +66,7 @@ class Game(object):
 		self.picmob_list = []
 		for i in range(14): #Normally 14
 			for x in range(20):
-				self.picmob = Number_mobs(game = g, xpos = 50* x, ypos = 50* i, img = x + (i * 20))
+				self.picmob = NumberMobs(game = g, xpos = 50* x, ypos = 50* i, img = x + (i * 20))
 				self.all_sprites.add(self.picmob)
 				self.picmob_list.append(self.picmob)
 
@@ -119,15 +121,26 @@ class Game(object):
 				if event.key == pg.K_ESCAPE:
 					if self.running:
 						self.running = False
-				if event.key == pg.K_SPACE:
-					self.bg_pic_number +=1
-					if self.bg_pic_number >= len(self.bgpic_list):
-						self.bg_pic_number = 0
-					self.all_sprites.empty()
-					self.background_pic(bg_pic_number = self.bg_pic_number)
-					self.create_picmobs()
 				if event.key == pg.K_KP_ENTER or event.key == pg.K_RETURN:
 					self.choose_number()
+					
+				if len(self.all_sprites) < 280:
+					if event.key == pg.K_SPACE:
+						self.bg_pic_number +=1
+						if self.bg_pic_number >= len(self.bgpic_list):
+							self.bg_pic_number = 0
+						self.all_sprites.empty()
+						self.background_pic(bg_pic_number = self.bg_pic_number)
+						self.create_picmobs()
+					if event.key == pg.K_y:
+						#Correct answer function
+						self.right_sound.play()
+						self.all_sprites.empty()
+					if event.key == pg.K_n:
+						#Incorrect answer
+						self.wrong_pic = WrongAnswer(game = g)
+						self.all_sprites.add(self.wrong_pic)
+						self.wrong_sound.play()
 
 	def draw(self):
 		#Game loop - draw
