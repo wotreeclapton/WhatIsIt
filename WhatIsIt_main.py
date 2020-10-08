@@ -6,7 +6,7 @@ WHAT IS IT APP LAUNCHER developed by Mr Steven J walden
 [See License.txt file]
 '''
 '''
-make a number pic sprite class
+stop spcae bar moving picture more than once
 
 
 '''
@@ -49,7 +49,7 @@ class Game(object):
 
 	def load_data(self):
 		#Load all image graphics
-		self.bgpic_list = [pg.image.load(path.join(IMG_FOLDER, f"Picture{x + 1}.png")) for x in range (15)]
+		self.bgpic_list = [pg.image.load(path.join(PIC_FOLDER, f"Picture{x + 1}.png")) for x in range (15)]
 		self.sprite_sheet = Spritesheet(path.join(IMG_FOLDER, "What_is_it_game_images.png"))
 		#Load all games sounds
 		self.wrong_sound = pg.mixer.Sound(path.join(SOUND_FOLDER, "Wrong.wav"))
