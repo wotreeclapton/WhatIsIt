@@ -31,7 +31,7 @@ class NumberMobs(pg.sprite.Sprite):
 		self.number_mobs = []
 		for y in range (14):
 			for x in range(20):
-				self.number_mobs.append(self.game.sprite_sheet.get_image(x * 50, y * 50, 50, 50)).set_alpha(10)
+				self.number_mobs.append(self.game.sprite_sheet.get_image(x * 50, y * 50, 50, 50))
 
 class WrongAnswer(pg.sprite.Sprite):
 	"""docstring for WrongAnswer"""
@@ -47,7 +47,6 @@ class WrongAnswer(pg.sprite.Sprite):
 		self.img_last_update = pg.time.get_ticks()
 
 	def update(self):
-		pass
 		#Change image
 		img_now = pg.time.get_ticks()
 		if img_now - self.img_last_update >= self.frame_rate:
@@ -61,6 +60,29 @@ class WrongAnswer(pg.sprite.Sprite):
 			self.rect.centerx = SCREENWIDTH / 2
 			self.rect.centery = SCREENHEIGHT / 2
 		
+class RightAnswer(WrongAnswer):
+	"""Inherent class from WrongAnswer"""
+	def __init__(self, game):
+		super(RightAnswer, self).__init__(game)
+		self.image = pg.image.load(path.join(IMG_FOLDER, f"Right{self.img_num}.png")).convert_alpha()
+		self.rect = self.image.get_rect()
+		self.rect.centerx = SCREENWIDTH / 2
+		self.rect.centery = SCREENHEIGHT / 2
+		self.frame_rate = 100
 
+	def update(self):
+		#Change image
+		img_now = pg.time.get_ticks()
+		if img_now - self.img_last_update >= self.frame_rate:
+			self.img_last_update = img_now
+			self.img_num += 1
+			if self.img_num > 19:
+				self.img_num = 19
+				self.kill()
+			self.image = pg.image.load(path.join(IMG_FOLDER, f"Right{self.img_num}.png")).convert_alpha()
+			self.rect = self.image.get_rect()
+			self.rect.centerx = SCREENWIDTH / 2
+			self.rect.centery = SCREENHEIGHT / 2
+		
 
 

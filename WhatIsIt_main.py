@@ -14,7 +14,7 @@ from os import path ,environ
 import pygame as pg
 import random
 from methods import *
-from sprites import NumberMobs, Spritesheet, WrongAnswer
+from sprites import NumberMobs, Spritesheet, WrongAnswer, RightAnswer
 import time
 
 
@@ -67,7 +67,7 @@ class Game(object):
 		for i in range(14): #Normally 14
 			for x in range(20):
 				self.picmob = NumberMobs(game = g, xpos = 50* x, ypos = 50* i, img = x + (i * 20))
-				self.all_sprites.add(self.picmob)
+				self.picmob_group.add(self.picmob)
 				self.picmob_list.append(self.picmob)
 
 	def read_piclist(self):
@@ -80,7 +80,7 @@ class Game(object):
 			self.chosen_numb += item
 		try:
 			if int(self.chosen_numb) >= 1 and int(self.chosen_numb) <= 280:
-				# print(int(self.chosen_numb)) #remove the sprite
+				#remove the sprite
 				self.picmob_list[int(self.chosen_numb) - 1].kill()
 		except ValueError:
 			pass
@@ -90,7 +90,7 @@ class Game(object):
 	def new(self):
 		#Start a new game
 		self.show_start_screen()
-		self.all_sprites = pg.sprite.Group()
+		self.answer_sprites = pg.sprite.Group()
 		self.picmob_group = pg.sprite.Group()
 		self.create_picmobs()
 		# print(time.strftime("%M Minuets %S Seconds"))
@@ -107,7 +107,8 @@ class Game(object):
 
 	def update(self):
 		#Game loop - update
-		self.all_sprites.update()
+		self.picmob_group.update()
+		self.answer_sprites.update()
 
 	def events(self):
 		#Game loop - events
@@ -124,29 +125,32 @@ class Game(object):
 				if event.key == pg.K_KP_ENTER or event.key == pg.K_RETURN:
 					self.choose_number()
 					
-				if len(self.all_sprites) < 280:
+				if len(self.picmob_group) < 280:
 					if event.key == pg.K_SPACE:
 						self.bg_pic_number +=1
 						if self.bg_pic_number >= len(self.bgpic_list):
 							self.bg_pic_number = 0
-						self.all_sprites.empty()
+						self.picmob_group.empty()
 						self.background_pic(bg_pic_number = self.bg_pic_number)
 						self.create_picmobs()
 					if event.key == pg.K_y:
 						#Correct answer function
+						self.right_pic = RightAnswer(game = g)
+						self.answer_sprites.add(self.right_pic)
 						self.right_sound.play()
-						self.all_sprites.empty()
+						self.picmob_group.empty()
 					if event.key == pg.K_n:
 						#Incorrect answer
 						self.wrong_pic = WrongAnswer(game = g)
-						self.all_sprites.add(self.wrong_pic)
+						self.answer_sprites.add(self.wrong_pic)
 						self.wrong_sound.play()
 
 	def draw(self):
 		#Game loop - draw
 		self.win.fill(BLACK)
 		self.win.blit(self.bgpic_scaled, (self.bgpic_scaled_rect.x, self.bgpic_scaled_rect.y))
-		self.all_sprites.draw(self.win)
+		self.picmob_group.draw(self.win)
+		self.answer_sprites.draw(self.win)
 		pg.display.update()
 
 	def show_start_screen(self):
