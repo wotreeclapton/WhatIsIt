@@ -39,11 +39,12 @@ class Game(object):
 		self.clock = pg.time.Clock()
 
 		self.load_data()
+		self.read_piclist()
 		self.background_pic(bg_pic_number = 0)
 
 		#Define game variables
 		self.running = True
-		self.bg_pic_number = 1
+		self.bg_pic_number = 0
 		self.iplist = []
 		self.chosen_numb = ""
 
@@ -61,6 +62,7 @@ class Game(object):
 		self.bgpic_scaled = pg.transform.scale(self.bgpic, (self.bgpic_rect.fit(self.win_rect)[2], self.bgpic_rect.fit(self.win_rect)[3]))
 		self.bgpic_scaled_rect = self.bgpic_scaled.get_rect()
 		self.bgpic_scaled_rect.centery = int(SCREENHEIGHT / 2)
+		print(f"{bg_pic_number + 1} {self.picture_list[bg_pic_number]}")
 
 	def create_picmobs(self):
 		self.picmob_list = []
@@ -71,8 +73,10 @@ class Game(object):
 				self.picmob_list.append(self.picmob)
 
 	def read_piclist(self):
+		self.picture_list = []
 		with open("picture_list.txt" ,"r") as file:
 			for line in file:
+				self.picture_list.append(line[:-1])
 				print(line[:-1])
 
 	def choose_number(self):
@@ -89,12 +93,11 @@ class Game(object):
 
 	def new(self):
 		#Start a new game
-		self.show_start_screen()
+		# self.show_start_screen()
 		self.answer_sprites = pg.sprite.Group()
 		self.picmob_group = pg.sprite.Group()
 		self.create_picmobs()
 		# print(time.strftime("%M Minuets %S Seconds"))
-		self.read_piclist()
 		self.run()
 
 	def run(self):
@@ -117,13 +120,24 @@ class Game(object):
 				if self.running:
 					self.running = False
 			elif event.type == pg.KEYDOWN:
-				if event.key != pg.K_KP_ENTER or event.key != pg.K_RETURN: #add all keydown events unicode (name) to a list excpt the enterkey
-					self.iplist.append(event.unicode)
+				self.iplist.append(event.unicode)
 				if event.key == pg.K_ESCAPE:
 					if self.running:
 						self.running = False
 				if event.key == pg.K_KP_ENTER or event.key == pg.K_RETURN:
 					self.choose_number()
+				if event.key == pg.K_UP:
+					self.bg_pic_number -=1
+					if self.bg_pic_number < 0:
+						self.bg_pic_number = len(self.bgpic_list)
+					self.background_pic(bg_pic_number = self.bg_pic_number)
+					self.iplist.clear()
+				if event.key == pg.K_DOWN:
+					self.bg_pic_number +=1
+					if self.bg_pic_number > len(self.bgpic_list):
+						self.bg_pic_number = 0
+					self.background_pic(bg_pic_number = self.bg_pic_number)
+					self.iplist.clear()
 					
 				if len(self.picmob_group) < 280:
 					if event.key == pg.K_SPACE:
@@ -133,17 +147,20 @@ class Game(object):
 						self.picmob_group.empty()
 						self.background_pic(bg_pic_number = self.bg_pic_number)
 						self.create_picmobs()
+						self.iplist.clear()
 					if event.key == pg.K_y:
 						#Correct answer function
 						self.right_pic = RightAnswer(game = g)
 						self.answer_sprites.add(self.right_pic)
 						self.right_sound.play()
 						self.picmob_group.empty()
+						self.iplist.clear()
 					if event.key == pg.K_n:
 						#Incorrect answer
 						self.wrong_pic = WrongAnswer(game = g)
 						self.answer_sprites.add(self.wrong_pic)
 						self.wrong_sound.play()
+						self.iplist.clear()
 
 	def draw(self):
 		#Game loop - draw
