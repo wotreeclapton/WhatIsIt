@@ -38,8 +38,8 @@ class Game(object):
 		pg.display.set_caption(f"{GAMENAME} Version {__version__}")
 		self.clock = pg.time.Clock()
 
-		self.load_data()
 		self.read_piclist()
+		self.load_data()
 		self.background_pic(bg_pic_number = 0)
 
 		#Define game variables
@@ -50,7 +50,7 @@ class Game(object):
 
 	def load_data(self):
 		#Load all image graphics
-		self.bgpic_list = [pg.image.load(path.join(PIC_FOLDER, f"Picture{x + 1}.png")) for x in range (15)]
+		self.bgpic_list = [pg.image.load(path.join(PIC_FOLDER, f"Picture{x + 1}.png")) for x in range (len(self.picture_list))]
 		self.sprite_sheet = Spritesheet(path.join(IMG_FOLDER, "What_is_it_game_images.png"))
 		#Load all games sounds
 		self.wrong_sound = pg.mixer.Sound(path.join(SOUND_FOLDER, "Wrong.wav"))
@@ -127,15 +127,15 @@ class Game(object):
 				if event.key == pg.K_KP_ENTER or event.key == pg.K_RETURN:
 					self.choose_number()
 				if event.key == pg.K_UP:
-					self.bg_pic_number -=1
-					if self.bg_pic_number < 0:
-						self.bg_pic_number = len(self.bgpic_list)
+					self.bg_pic_number +=1
+					if self.bg_pic_number > len(self.bgpic_list) - 1:
+						self.bg_pic_number = 0
 					self.background_pic(bg_pic_number = self.bg_pic_number)
 					self.iplist.clear()
 				if event.key == pg.K_DOWN:
-					self.bg_pic_number +=1
-					if self.bg_pic_number > len(self.bgpic_list):
-						self.bg_pic_number = 0
+					self.bg_pic_number -=1
+					if self.bg_pic_number < 0:
+						self.bg_pic_number = len(self.bgpic_list) - 1
 					self.background_pic(bg_pic_number = self.bg_pic_number)
 					self.iplist.clear()
 					
