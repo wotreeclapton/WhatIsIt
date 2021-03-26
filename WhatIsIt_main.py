@@ -7,7 +7,8 @@ WHAT IS IT APP LAUNCHER developed by Mr Steven J walden
 '''
 '''
 stop spcae bar moving picture more than once
-
+Easy and hard mode
+randomize pictures
 
 '''
 from os import path ,environ
@@ -37,24 +38,31 @@ class Game(object):
 		pg.display.set_icon(self.logo)
 		pg.display.set_caption(f"{GAMENAME} Version {__version__}")
 		self.clock = pg.time.Clock()
-
-		self.read_piclist()
-		self.load_data()
-		self.background_pic(bg_pic_number = 0)
-
+		
 		#Define game variables
 		self.running = True
 		self.bg_pic_number = 0
 		self.iplist = []
 		self.chosen_numb = ""
 
+		self.read_piclist()
+		self.load_data()
+		self.create_random_number_list()
+		self.background_pic(bg_pic_number = self.rand_num_list[self.bg_pic_number])
+
+
 	def load_data(self):
 		#Load all image graphics
-		self.bgpic_list = [pg.image.load(path.join(PIC_FOLDER, f"Picture{x + 1}.png")) for x in range (len(self.picture_list))]
+		self.bgpic_list = [pg.image.load(path.join(PIC_FOLDER, f"{self.picture_list[x]}.png")) for x in range (len(self.picture_list))]
+		# self.bgpic_list = [pg.image.load(path.join(PIC_FOLDER, f"Picture{x + 1}.png")) for x in range (len(self.picture_list))]
 		self.sprite_sheet = Spritesheet(path.join(IMG_FOLDER, "What_is_it_game_images.png"))
 		#Load all games sounds
 		self.wrong_sound = pg.mixer.Sound(path.join(SOUND_FOLDER, "Wrong.wav"))
 		self.right_sound = pg.mixer.Sound(path.join(SOUND_FOLDER, "Right.wav"))
+
+	def create_random_number_list(self):
+		self.rand_num_list = [i for i in range(len(self.bgpic_list))]
+		random.shuffle(self.rand_num_list)
 
 	def background_pic(self, bg_pic_number):
 		self.bgpic = self.bgpic_list[bg_pic_number]
@@ -73,6 +81,7 @@ class Game(object):
 				self.picmob_list.append(self.picmob)
 
 	def read_piclist(self):
+		#Prints out a list of pictures from the list to the console
 		self.picture_list = []
 		with open("picture_list.txt" ,"r") as file:
 			for line in file:
@@ -126,26 +135,27 @@ class Game(object):
 						self.running = False
 				if event.key == pg.K_KP_ENTER or event.key == pg.K_RETURN:
 					self.choose_number()
-				if event.key == pg.K_UP:
-					self.bg_pic_number +=1
-					if self.bg_pic_number > len(self.bgpic_list) - 1:
-						self.bg_pic_number = 0
-					self.background_pic(bg_pic_number = self.bg_pic_number)
-					self.iplist.clear()
-				if event.key == pg.K_DOWN:
-					self.bg_pic_number -=1
-					if self.bg_pic_number < 0:
-						self.bg_pic_number = len(self.bgpic_list) - 1
-					self.background_pic(bg_pic_number = self.bg_pic_number)
-					self.iplist.clear()
+				# if event.key == pg.K_UP:
+				# 	self.bg_pic_number +=1
+				# 	if self.bg_pic_number > len(self.bgpic_list) - 1:
+				# 		self.bg_pic_number = 0
+				# 	self.background_pic(bg_pic_number = self.bg_pic_number)
+				# 	self.iplist.clear()
+				# if event.key == pg.K_DOWN:
+				# 	self.bg_pic_number -=1
+				# 	if self.bg_pic_number < 0:
+				# 		self.bg_pic_number = len(self.bgpic_list) - 1
+				# 	self.background_pic(bg_pic_number = self.bg_pic_number)
+				# 	self.iplist.clear()
 					
-				if len(self.picmob_group) < 280:
+				if len(self.picmob_group) < 280: #Stops reveal if no numbers have been chosen
 					if event.key == pg.K_SPACE:
+						# self.bg_pic_number = random.randrange(start=1, stop=len(self.bgpic_list))
 						self.bg_pic_number +=1
 						if self.bg_pic_number >= len(self.bgpic_list):
 							self.bg_pic_number = 0
 						self.picmob_group.empty()
-						self.background_pic(bg_pic_number = self.bg_pic_number)
+						self.background_pic(bg_pic_number = self.rand_num_list[self.bg_pic_number])
 						self.create_picmobs()
 						self.iplist.clear()
 					if event.key == pg.K_y:
