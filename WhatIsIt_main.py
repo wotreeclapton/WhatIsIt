@@ -8,19 +8,19 @@ WHAT IS IT APP LAUNCHER developed by Mr Steven J walden
 '''
 stop spcae bar moving picture more than once
 Easy and hard mode
-randomize pictures
+load files from any location on HD
 
 '''
 from os import path ,environ
 import pygame as pg
 import random
 from methods import *
-from sprites import NumberMobs, Spritesheet, WrongAnswer, RightAnswer
+from Guis_and_sprites import NumberMobs, Spritesheet, WrongAnswer, RightAnswer
 import time
 
 
 __author__ = 'Mr Steven J Walden'
-__version__ = '1.0.0'
+__version__ = '1.1.0'
 
 class Game(object):
 	"""docstring for Game"""

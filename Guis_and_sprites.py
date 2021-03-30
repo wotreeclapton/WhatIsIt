@@ -1,6 +1,69 @@
-#Sprite classes for game 
+#! python 3
+'''
+WHAT IS IT APP LAUNCHER developed by Mr Steven J walden
+    Sept. 2020
+    SAMROIYOD, PRACHUAP KIRI KHAN, THAILAND
+[See License.txt file]
+'''
+
+#Gui's and Sprite classes for game 
+import sys
+from PyQt5 import QtWidgets, QtGui, QtCore
+#from PyQt5.QtWidgets import QWidget
 import pygame as pg
 from methods import *
+
+class StartUpGui(QtWidgets.QWidget):
+	"""docstrbing for MyApp"""
+	def __init__(self, parent=None):
+		super(StartUpGui, self).__init__(parent)
+		self.initUI()
+
+	def initUI(self):
+		#Set up GUI
+		self.resize(180, 255)
+		self.setMinimumSize(180, 255)
+		self.setMaximumSize(180, 255)
+		self.setWindowIcon(QtGui.QIcon("img/Ep_window_icon.ico"))
+		self.setWindowTitle("What is it?")
+
+		self.add_buttons()
+		self.tab_order()
+
+	def add_buttons(self):
+		bfont = QtGui.QFont()
+		bfont.setPointSize(14)
+		bfont.setBold(True)
+		bfont.setItalic(True)
+		self.EasyModeButton = QtWidgets.QPushButton(self)
+		self.EasyModeButton.setGeometry(10, 10, 160, 60)
+		# self.EasyModeButton.setFocusPolicy(QtCore.Qt.NoFocus)
+		self.EasyModeButton.setCheckable(True)
+		self.EasyModeButton.setFont(bfont)
+		self.EasyModeButton.setText("Easy Mode")
+
+		self.HardModeButton = QtWidgets.QPushButton(self)
+		self.HardModeButton.setGeometry(10, 80, 160, 60)
+		# self.HardModeButton.setFocusPolicy(QtCore.Qt.NoFocus)
+		self.HardModeButton.setCheckable(True)
+		self.HardModeButton.setFont(bfont)
+		self.HardModeButton.setText("Hard Mode")
+
+		self.LoadImagesButton = QtWidgets.QPushButton(self)
+		self.LoadImagesButton.setGeometry(10, 150, 160, 60)
+		# self.LoadImagesButton.setFocusPolicy(QtCore.Qt.NoFocus)
+		self.LoadImagesButton.setFont(bfont)
+		self.LoadImagesButton.setText("Load Images")
+
+		#Button box setup for OKay and cancel buttons
+		self.StartGameButtonBox = QtWidgets.QDialogButtonBox(self)
+		self.StartGameButtonBox.setGeometry(10, 220, 156, 23)
+		self.StartGameButtonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Close|QtWidgets.QDialogButtonBox.Ok)
+
+	def tab_order(self):
+		self.setTabOrder(self.EasyModeButton, self.HardModeButton)
+		self.setTabOrder(self.HardModeButton, self.LoadImagesButton)
+		self.setTabOrder(self.StartGameButtonBox, self.EasyModeButton)
 
 class Spritesheet:
 	def __init__(self, filename):
@@ -84,5 +147,11 @@ class RightAnswer(WrongAnswer):
 			self.rect.centerx = SCREENWIDTH / 2
 			self.rect.centery = SCREENHEIGHT / 2
 		
+#Runn Gui
+if __name__ == '__main__':
+	app = QtWidgets.QApplication(sys.argv)
+	main_app = StartUpGui()
+	main_app.show()
 
 
+sys.exit(app.exec_())
