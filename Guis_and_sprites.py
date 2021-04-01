@@ -39,6 +39,7 @@ class StartUpGui(QtWidgets.QWidget):
 		self.EasyModeButton.setGeometry(10, 10, 160, 60)
 		# self.EasyModeButton.setFocusPolicy(QtCore.Qt.NoFocus)
 		self.EasyModeButton.setCheckable(True)
+		self.EasyModeButton.setChecked(True)
 		self.EasyModeButton.setFont(bfont)
 		self.EasyModeButton.setText("Easy Mode")
 
@@ -148,10 +149,10 @@ class RightAnswer(WrongAnswer):
 			self.rect.centery = SCREENHEIGHT / 2
 		
 #Runn Gui
-if __name__ == '__main__':
-	app = QtWidgets.QApplication(sys.argv)
-	main_app = StartUpGui()
-	main_app.show()
+# if __name__ == '__main__':
+# 	app = QtWidgets.QApplication(sys.argv)
+# 	main_app = StartUpGui()
+# 	main_app.show()
 
 
-sys.exit(app.exec_())
+# sys.exit(app.exec_())

@@ -11,27 +11,62 @@ from PyQt5.QtCore import Qt
 import sys
 #from PyQt5.QtWidgets import QApplication, QPushButton
 
+from Guis_and_sprites import StartUpGui
+
+__author__ = 'Mr Steven J Walden'
+__version__ = '1.2.0'
 
 class Main_Gui():
 	def __init__(self):
 
 		self.app = QtWidgets.QApplication(sys.argv)
 
-		self.Setup = QtWidgets.QMainWindow()
+		# self.Setup = QtWidgets.QMainWindow()
 
-		self.ui = Ui_Setup()
-		self.ui.setupUi(self.Setup)
-		self.icon = QtGui.QIcon()
+		self.ui = StartUpGui()
+		# self.ui.setupUi(self.Setup)
+		# self.icon = QtGui.QIcon()
 		self.load_data()
 		self.dark_theme()
-		self.Setup.setWindowIcon(self.icon)
+		# self.Setup.setWindowIcon(self.icon)
 
-		self.Setup.show()
+		#connect buttons
+		self.ui.StartGameButtonBox.accepted.connect(self.start_okaybutton_clicked)
+		self.ui.StartGameButtonBox.rejected.connect(self.start_closebutton_clicked)
+		self.ui.EasyModeButton.clicked.connect(self.easy_mode_button_clicked)
+		self.ui.HardModeButton.clicked.connect(self.hard_mode_button_clicked)
+		self.ui.LoadImagesButton.clicked.connect(self.load_images_button_clicked)
+
+		self.ui.show()
 		sys.exit(self.app.exec_())
 
 	def load_data(self):
 		#Load all image graphics
 		pass
+
+	def easy_mode_button_clicked(self):
+		if self.ui.EasyModeButton.isChecked():
+			self.ui.HardModeButton.setChecked(False)
+		else:
+			self.ui.EasyModeButton.setChecked(True)
+
+	def hard_mode_button_clicked(self):
+		if self.ui.HardModeButton.isChecked():
+			self.ui.EasyModeButton.setChecked(False)
+		else:
+			self.ui.HardModeButton.setChecked(True)
+
+	def load_images_button_clicked(self):
+		print("load")
+
+	def start_okaybutton_clicked(self):
+		if self.ui.HardModeButton.isChecked():
+			print("Hard mode")
+		if self.ui.EasyModeButton.isChecked():
+			print("Easy mode")
+
+	def start_closebutton_clicked(self):
+		self.app.exit()
 
 	def dark_theme(self):
 		self.app.setStyle("Fusion")
@@ -69,4 +104,7 @@ class Main_Gui():
 
 
 if __name__ == "__main__":
+	print("Author:", __author__)
+	print("App version:",__version__)
+
 	Main_Gui()
