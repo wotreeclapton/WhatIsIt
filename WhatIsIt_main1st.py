@@ -12,6 +12,7 @@ import sys
 #from PyQt5.QtWidgets import QApplication, QPushButton
 
 from Guis_and_sprites import StartUpGui
+from methods import dark_theme, light_theme
 
 __author__ = 'Mr Steven J Walden'
 __version__ = '1.2.0'
@@ -27,7 +28,7 @@ class Main_Gui():
 		# self.ui.setupUi(self.Setup)
 		# self.icon = QtGui.QIcon()
 		self.load_data()
-		self.dark_theme()
+		dark_theme(app=self.app)
 		# self.Setup.setWindowIcon(self.icon)
 
 		#connect buttons
@@ -68,31 +69,31 @@ class Main_Gui():
 	def start_closebutton_clicked(self):
 		self.app.exit()
 
-	def dark_theme(self):
-		self.app.setStyle("Fusion")
+	# def dark_theme(self):
+	# 	self.app.setStyle("Fusion")
 
-		self.dark_palette = QPalette()
+	# 	self.dark_palette = QPalette()
 
-		self.dark_palette.setColor(QPalette.Window,QColor(53,53,53))
-		self.dark_palette.setColor(QPalette.WindowText, Qt.white)
-		self.dark_palette.setColor(QPalette.Base, QColor(25, 25, 25))
-		self.dark_palette.setColor(QPalette.AlternateBase, QColor(53, 53, 53))
-		self.dark_palette.setColor(QPalette.ToolTipBase, Qt.white)
-		self.dark_palette.setColor(QPalette.ToolTipText, Qt.white)
-		self.dark_palette.setColor(QPalette.Text, Qt.white)
-		self.dark_palette.setColor(QPalette.Button, QColor(53, 53, 53))
-		self.dark_palette.setColor(QPalette.ButtonText, Qt.white)
-		self.dark_palette.setColor(QPalette.BrightText, Qt.red)
-		self.dark_palette.setColor(QPalette.Link, QColor(42, 130, 218))
-		self.dark_palette.setColor(QPalette.Highlight, QColor(42, 130, 218))
-		self.dark_palette.setColor(QPalette.HighlightedText, Qt.black)
+	# 	self.dark_palette.setColor(QPalette.Window,QColor(53,53,53))
+	# 	self.dark_palette.setColor(QPalette.WindowText, Qt.white)
+	# 	self.dark_palette.setColor(QPalette.Base, QColor(25, 25, 25))
+	# 	self.dark_palette.setColor(QPalette.AlternateBase, QColor(53, 53, 53))
+	# 	self.dark_palette.setColor(QPalette.ToolTipBase, Qt.white)
+	# 	self.dark_palette.setColor(QPalette.ToolTipText, Qt.white)
+	# 	self.dark_palette.setColor(QPalette.Text, Qt.white)
+	# 	self.dark_palette.setColor(QPalette.Button, QColor(53, 53, 53))
+	# 	self.dark_palette.setColor(QPalette.ButtonText, Qt.white)
+	# 	self.dark_palette.setColor(QPalette.BrightText, Qt.red)
+	# 	self.dark_palette.setColor(QPalette.Link, QColor(42, 130, 218))
+	# 	self.dark_palette.setColor(QPalette.Highlight, QColor(42, 130, 218))
+	# 	self.dark_palette.setColor(QPalette.HighlightedText, Qt.black)
 
-		self.app.setPalette(self.dark_palette)
+	# 	self.app.setPalette(self.dark_palette)
 
-		self.app.setStyleSheet("QToolTip { color: #ffffff; background-color: #2a82da; border: 1px solid white; }")
+	# 	self.app.setStyleSheet("QToolTip { color: #ffffff; background-color: #2a82da; border: 1px solid white; }")
 
 	def start_button_clicked(self):
-		#creat an instance of the main clock app
+		#creat an instance of the main game app
 		# app = App(self.countdown_time, self.sound_option, self.min_hand, self.scroll, self.hour_num, self.sec_num, self.music_choice)
 
 		# while app.running:
