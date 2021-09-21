@@ -1,4 +1,4 @@
-#! python 3
+##! python 3
 '''
 WHAT IS IT APP LAUNCHER developed by Mr Steven J walden
     Sept. 2020
@@ -21,9 +21,9 @@ class StartUpGui(QtWidgets.QWidget):
 
 	def initUI(self):
 		#Set up GUI
-		self.resize(180, 255)
-		self.setMinimumSize(180, 255)
-		self.setMaximumSize(180, 255)
+		self.resize(180, 272)
+		self.setMinimumSize(180, 272)
+		self.setMaximumSize(180, 272)
 		self.setWindowIcon(QtGui.QIcon("img/Ep_window_icon.ico"))
 		self.setWindowTitle("What is it?")
 
@@ -35,8 +35,9 @@ class StartUpGui(QtWidgets.QWidget):
 		bfont.setPointSize(14)
 		bfont.setBold(True)
 		bfont.setItalic(True)
+
 		self.EasyModeButton = QtWidgets.QPushButton(self)
-		self.EasyModeButton.setGeometry(10, 10, 160, 60)
+		self.EasyModeButton.setGeometry(10, 28, 160, 60)
 		# self.EasyModeButton.setFocusPolicy(QtCore.Qt.NoFocus)
 		self.EasyModeButton.setCheckable(True)
 		self.EasyModeButton.setChecked(True)
@@ -44,21 +45,31 @@ class StartUpGui(QtWidgets.QWidget):
 		self.EasyModeButton.setText("Easy Mode")
 
 		self.HardModeButton = QtWidgets.QPushButton(self)
-		self.HardModeButton.setGeometry(10, 80, 160, 60)
+		self.HardModeButton.setGeometry(10, 98, 160, 60)
 		# self.HardModeButton.setFocusPolicy(QtCore.Qt.NoFocus)
 		self.HardModeButton.setCheckable(True)
 		self.HardModeButton.setFont(bfont)
 		self.HardModeButton.setText("Hard Mode")
 
 		self.LoadImagesButton = QtWidgets.QPushButton(self)
-		self.LoadImagesButton.setGeometry(10, 150, 160, 60)
+		self.LoadImagesButton.setGeometry(10, 168, 160, 60)
 		# self.LoadImagesButton.setFocusPolicy(QtCore.Qt.NoFocus)
 		self.LoadImagesButton.setFont(bfont)
 		self.LoadImagesButton.setText("Load Images")
 
+		#Button for switchiong to darkmode
+		bfont.setPointSize(8)
+		bfont.setBold(False)
+		self.DarkModeButton = QtWidgets.QPushButton(self)
+		self.DarkModeButton.setGeometry(130, 4, 40, 20)
+		self.DarkModeButton.setFocusPolicy(QtCore.Qt.NoFocus)		
+		self.DarkModeButton.setCheckable(True)
+		self.DarkModeButton.setFont(bfont)
+		self.DarkModeButton.setText("Dark")
+
 		#Button box setup for OKay and cancel buttons
 		self.StartGameButtonBox = QtWidgets.QDialogButtonBox(self)
-		self.StartGameButtonBox.setGeometry(10, 220, 156, 23)
+		self.StartGameButtonBox.setGeometry(12, 238, 156, 23)
 		self.StartGameButtonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Close|QtWidgets.QDialogButtonBox.Ok)
 
 	def tab_order(self):

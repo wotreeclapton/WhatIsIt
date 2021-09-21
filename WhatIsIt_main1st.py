@@ -1,4 +1,3 @@
-#! python 3
 '''
 WHAT IS IT APP LAUNCHER developed by Mr Steven J walden
     Sept. 2020
@@ -20,18 +19,17 @@ __version__ = '1.2.0'
 class Main_Gui():
 	def __init__(self):
 
-		self.app = QtWidgets.QApplication(sys.argv)
-
 		# self.Setup = QtWidgets.QMainWindow()
 
 		self.ui = StartUpGui()
 		# self.ui.setupUi(self.Setup)
 		# self.icon = QtGui.QIcon()
 		self.load_data()
-		dark_theme(app=self.app)
+		#dark_theme(app=app)
 		# self.Setup.setWindowIcon(self.icon)
 
 		#connect buttons
+		self.ui.DarkModeButton.clicked.connect(self.theme_choice)
 		self.ui.StartGameButtonBox.accepted.connect(self.start_okaybutton_clicked)
 		self.ui.StartGameButtonBox.rejected.connect(self.start_closebutton_clicked)
 		self.ui.EasyModeButton.clicked.connect(self.easy_mode_button_clicked)
@@ -39,7 +37,15 @@ class Main_Gui():
 		self.ui.LoadImagesButton.clicked.connect(self.load_images_button_clicked)
 
 		self.ui.show()
-		sys.exit(self.app.exec_())
+		sys.exit(app.exec_())
+
+	def theme_choice(self):
+		if self.ui.DarkModeButton.isChecked():
+			dark_theme(app)
+			self.ui.DarkModeButton.setText("Light")
+		else:
+			light_theme(app)
+			self.ui.DarkModeButton.setText("Dark")
 
 	def load_data(self):
 		#Load all image graphics
@@ -67,7 +73,7 @@ class Main_Gui():
 			print("Easy mode")
 
 	def start_closebutton_clicked(self):
-		self.app.exit()
+		app.exit()
 
 	# def dark_theme(self):
 	# 	self.app.setStyle("Fusion")
@@ -108,4 +114,5 @@ if __name__ == "__main__":
 	print("Author:", __author__)
 	print("App version:",__version__)
 
+	app = QtWidgets.QApplication(sys.argv)
 	Main_Gui()

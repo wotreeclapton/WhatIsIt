@@ -54,7 +54,7 @@ def dark_theme(app):
 
 	app.setStyleSheet("QToolTip { color: #ffffff; background-color: #2a82da; border: 1px solid white; }")
 
-def light_theme():
+def light_theme(app):
 	app.setStyle("Fusion")
 
 	light_palette = QPalette()
