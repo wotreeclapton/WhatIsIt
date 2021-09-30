@@ -12,12 +12,15 @@ import sys
 
 from Guis_and_sprites import StartUpGui
 from methods import dark_theme, light_theme
+from Whatisit_app import *
+
 
 __author__ = 'Mr Steven J Walden'
 __version__ = '1.2.0'
 
 class Main_Gui():
 	def __init__(self):
+		self.app = QtWidgets.QApplication(sys.argv)
 
 		# self.Setup = QtWidgets.QMainWindow()
 
@@ -25,7 +28,6 @@ class Main_Gui():
 		# self.ui.setupUi(self.Setup)
 		# self.icon = QtGui.QIcon()
 		self.load_data()
-		#dark_theme(app=app)
 		# self.Setup.setWindowIcon(self.icon)
 
 		#connect buttons
@@ -37,14 +39,14 @@ class Main_Gui():
 		self.ui.LoadImagesButton.clicked.connect(self.load_images_button_clicked)
 
 		self.ui.show()
-		sys.exit(app.exec_())
+		sys.exit(self.app.exec_())
 
 	def theme_choice(self):
 		if self.ui.DarkModeButton.isChecked():
-			dark_theme(app)
+			dark_theme(self.app)
 			self.ui.DarkModeButton.setText("Light")
 		else:
-			light_theme(app)
+			light_theme(self.app)
 			self.ui.DarkModeButton.setText("Dark")
 
 	def load_data(self):
@@ -71,42 +73,19 @@ class Main_Gui():
 			print("Hard mode")
 		if self.ui.EasyModeButton.isChecked():
 			print("Easy mode")
+		#creat an instance of the main game app
+		self.app = Game()
+
+		while self.app.running:
+			self.app.new(self.ui) #pass through the gui instance to close after pygame set up
+			self.ui.show()
+			pg.quit()
+		
 
 	def start_closebutton_clicked(self):
-		app.exit()
-
-	# def dark_theme(self):
-	# 	self.app.setStyle("Fusion")
-
-	# 	self.dark_palette = QPalette()
-
-	# 	self.dark_palette.setColor(QPalette.Window,QColor(53,53,53))
-	# 	self.dark_palette.setColor(QPalette.WindowText, Qt.white)
-	# 	self.dark_palette.setColor(QPalette.Base, QColor(25, 25, 25))
-	# 	self.dark_palette.setColor(QPalette.AlternateBase, QColor(53, 53, 53))
-	# 	self.dark_palette.setColor(QPalette.ToolTipBase, Qt.white)
-	# 	self.dark_palette.setColor(QPalette.ToolTipText, Qt.white)
-	# 	self.dark_palette.setColor(QPalette.Text, Qt.white)
-	# 	self.dark_palette.setColor(QPalette.Button, QColor(53, 53, 53))
-	# 	self.dark_palette.setColor(QPalette.ButtonText, Qt.white)
-	# 	self.dark_palette.setColor(QPalette.BrightText, Qt.red)
-	# 	self.dark_palette.setColor(QPalette.Link, QColor(42, 130, 218))
-	# 	self.dark_palette.setColor(QPalette.Highlight, QColor(42, 130, 218))
-	# 	self.dark_palette.setColor(QPalette.HighlightedText, Qt.black)
-
-	# 	self.app.setPalette(self.dark_palette)
-
-	# 	self.app.setStyleSheet("QToolTip { color: #ffffff; background-color: #2a82da; border: 1px solid white; }")
+		self.app.exit()
 
 	def start_button_clicked(self):
-		#creat an instance of the main game app
-		# app = App(self.countdown_time, self.sound_option, self.min_hand, self.scroll, self.hour_num, self.sec_num, self.music_choice)
-
-		# while app.running:
-		# 	app.new(self.Setup) #pass through the gui instance to close after pygame set up
-		# 	self.Setup.show()
-		# 	pg.quit()
-		# self.Setup.hide()
 		pass
 
 
@@ -114,5 +93,4 @@ if __name__ == "__main__":
 	print("Author:", __author__)
 	print("App version:",__version__)
 
-	app = QtWidgets.QApplication(sys.argv)
 	Main_Gui()

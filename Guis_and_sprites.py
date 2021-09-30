@@ -88,9 +88,10 @@ class Spritesheet:
 		return image
 
 class NumberMobs(pg.sprite.Sprite):
-	def __init__(self, game, xpos, ypos, img):
+	def __init__(self, spritesheet, xpos, ypos, img):
 		pg.sprite.Sprite.__init__(self)
-		self.game = game
+		#self.game = game
+		self.sprite_sheet = spritesheet
 		self.load_images()
 		self.image = self.number_mobs[img]
 		# self.image = pg.Surface((50,50))
@@ -106,13 +107,13 @@ class NumberMobs(pg.sprite.Sprite):
 		self.number_mobs = []
 		for y in range (14):
 			for x in range(20):
-				self.number_mobs.append(self.game.sprite_sheet.get_image(x * 50, y * 50, 50, 50))
+				self.number_mobs.append(self.sprite_sheet.get_image(x * 50, y * 50, 50, 50))
 
 class WrongAnswer(pg.sprite.Sprite):
 	"""docstring for WrongAnswer"""
-	def __init__(self, game):
+	def __init__(self):
 		pg.sprite.Sprite.__init__(self)
-		self.game = game
+		# self.game = game
 		self.img_num = 1
 		self.image = pg.image.load(path.join(IMG_FOLDER, f"Wrong{self.img_num}.png")).convert_alpha()
 		self.rect = self.image.get_rect()
@@ -137,8 +138,8 @@ class WrongAnswer(pg.sprite.Sprite):
 		
 class RightAnswer(WrongAnswer):
 	"""Inherent class from WrongAnswer"""
-	def __init__(self, game):
-		super(RightAnswer, self).__init__(game)
+	def __init__(self):
+		super(RightAnswer, self).__init__()
 		self.image = pg.image.load(path.join(IMG_FOLDER, f"Right{self.img_num}.png")).convert_alpha()
 		self.rect = self.image.get_rect()
 		self.rect.centerx = SCREENWIDTH / 2
