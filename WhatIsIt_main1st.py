@@ -16,7 +16,7 @@ from Whatisit_app import *
 
 
 __author__ = 'Mr Steven J Walden'
-__version__ = '1.2.0'
+__version__ = '1.3.0'
 
 class Main_Gui():
 	def __init__(self):
@@ -77,16 +77,13 @@ class Main_Gui():
 		self.app = Game()
 
 		while self.app.running:
-			self.app.new(self.ui) #pass through the gui instance to close after pygame set up
+			self.app.new(self.ui) #pass through the gui instance to hide after pygame set up
 			self.ui.show()
 			pg.quit()
 		
 
 	def start_closebutton_clicked(self):
 		self.app.exit()
-
-	def start_button_clicked(self):
-		pass
 
 
 if __name__ == "__main__":
