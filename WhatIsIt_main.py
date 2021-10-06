@@ -8,6 +8,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QPalette, QColor
 from PyQt5.QtCore import Qt
 import sys
+import os
+from os.path import expanduser
 #from PyQt5.QtWidgets import QApplication, QPushButton
 
 from Guis_and_sprites import StartUpGui
@@ -20,14 +22,14 @@ __version__ = '1.3.0'
 
 class Main_Gui():
 	def __init__(self):
-		self.app = QtWidgets.QApplication(sys.argv)
+		self.gui_app = QtWidgets.QApplication(sys.argv)
 
 		# self.Setup = QtWidgets.QMainWindow()
 
 		self.ui = StartUpGui()
 		# self.ui.setupUi(self.Setup)
 		# self.icon = QtGui.QIcon()
-		self.load_data()
+		self.picture_list = []
 		# self.Setup.setWindowIcon(self.icon)
 
 		#connect buttons
@@ -39,7 +41,7 @@ class Main_Gui():
 		self.ui.LoadImagesButton.clicked.connect(self.load_images_button_clicked)
 
 		self.ui.show()
-		sys.exit(self.app.exec_())
+		sys.exit(self.gui_app.exec_())
 
 	def theme_choice(self):
 		if self.ui.DarkModeButton.isChecked():
@@ -48,10 +50,6 @@ class Main_Gui():
 		else:
 			light_theme(self.app)
 			self.ui.DarkModeButton.setText("Dark")
-
-	def load_data(self):
-		#Load all image graphics
-		pass
 
 	def easy_mode_button_clicked(self):
 		if self.ui.EasyModeButton.isChecked():
@@ -66,7 +64,17 @@ class Main_Gui():
 			self.ui.HardModeButton.setChecked(True)
 
 	def load_images_button_clicked(self):
-		print("load")
+		try:
+			#Open folder browser window and choose a folder
+			self.my_dir = QtWidgets.QFileDialog.getExistingDirectory(self.ui, "Choose a folder", expanduser("~"), QtWidgets.QFileDialog.ShowDirsOnly)
+			# List all files in a directory using listdir()
+			for file in os.listdir(self.my_dir):
+				if file.endswith(".png"):
+					self.picture_list.append(file)
+			print(self.picture_list)
+		except FileNotFoundError:
+			pass
+
 
 	def start_okaybutton_clicked(self):
 		if self.ui.HardModeButton.isChecked():
@@ -74,16 +82,16 @@ class Main_Gui():
 		if self.ui.EasyModeButton.isChecked():
 			print("Easy mode")
 		#creat an instance of the main game app
-		self.app = Game()
+		self.game_app = Game(__version__, self.picture_list, self.my_dir)
 
-		while self.app.running:
-			self.app.new(self.ui) #pass through the gui instance to hide after pygame set up
+		while self.game_app.running:
+			self.game_app.new(self.ui) #pass through the gui instance to hide after pygame set up
 			self.ui.show()
 			pg.quit()
 		
 
 	def start_closebutton_clicked(self):
-		self.app.exit()
+		self.gui_app.exit()
 
 
 if __name__ == "__main__":

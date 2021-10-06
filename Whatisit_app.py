@@ -1,30 +1,22 @@
 '''
-WHAT IS IT APP LAUNCHER developed by Mr Steven J walden
+WHAT IS IT APPLICATION developed by Mr Steven J walden
     Sept. 2020
     SAMROIYOD, PRACHUAP KIRI KHAN, THAILAND
 [See License.txt file]
-'''
-'''
-stop spcae bar moving picture more than once
-Easy and hard mode
-load files from any location on HD
-
+This is the main application/game launched from the GUI
 '''
 from os import path ,environ
 import pygame as pg
 import random
 from methods import *
-# from WhatIsIt_main1st import *
 from Guis_and_sprites import NumberMobs, Spritesheet, WrongAnswer, RightAnswer
 import time
 
 
-__author__ = 'Mr Steven J Walden'
-__version__ = '1.1.0'
 
 class Game(object):
 	"""docstring for Game"""
-	def __init__(self):
+	def __init__(self, __version__, picture_list, pic_folder):
 		#Initialize game window, etc
 		#set game screen placement
 		environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (COMX,COMY)
@@ -40,12 +32,14 @@ class Game(object):
 		self.clock = pg.time.Clock()
 		
 		#Define game variables
+		self.picture_list = picture_list
+		self.picture_folder = pic_folder
 		self.running = True
 		self.bg_pic_number = 0
 		self.iplist = []
 		self.chosen_numb = ""
 
-		self.read_piclist()
+		# self.read_piclist()
 		self.load_data()
 		self.create_random_number_list()
 		self.background_pic(bg_pic_number = self.rand_num_list[self.bg_pic_number])
@@ -53,8 +47,8 @@ class Game(object):
 
 	def load_data(self):
 		#Load all image graphics
-		self.bgpic_list = [pg.image.load(path.join(PIC_FOLDER, f"{self.picture_list[x]}.png")) for x in range (len(self.picture_list))]
-		# self.bgpic_list = [pg.image.load(path.join(PIC_FOLDER, f"Picture{x + 1}.png")) for x in range (len(self.picture_list))]
+		self.bgpic_list = [pg.image.load(path.join(self.picture_folder, self.picture_list[x])) for x in range (len(self.picture_list))]
+		# self.bgpic_list = [pg.image.load(path.join(PIC_FOLDER, f"{self.picture_list[x]}.png")) for x in range (len(self.picture_list))]
 		self.sprite_sheet = Spritesheet(path.join(IMG_FOLDER, "What_is_it_game_images.png"))
 		#Load all games sounds
 		self.wrong_sound = pg.mixer.Sound(path.join(SOUND_FOLDER, "Wrong.wav"))
@@ -70,7 +64,7 @@ class Game(object):
 		self.bgpic_scaled = pg.transform.scale(self.bgpic, (self.bgpic_rect.fit(self.win_rect)[2], self.bgpic_rect.fit(self.win_rect)[3]))
 		self.bgpic_scaled_rect = self.bgpic_scaled.get_rect()
 		self.bgpic_scaled_rect.centery = int(SCREENHEIGHT / 2)
-		print(f"{bg_pic_number + 1} {self.picture_list[bg_pic_number]}")
+		print(f"{bg_pic_number + 1} {self.picture_list[bg_pic_number][:-4]}")
 
 	def create_picmobs(self):
 		self.picmob_list = []
@@ -132,7 +126,7 @@ class Game(object):
 					self.running = False
 			elif event.type == pg.KEYDOWN:
 				self.iplist.append(event.unicode)
-				if event.key == pg.K_ESCAPE:
+				if event.key == pg.K_ESCAPE or event.key == pg.K_q:
 					if self.running:
 						self.running = False
 				if event.key == pg.K_KP_ENTER or event.key == pg.K_RETURN:
