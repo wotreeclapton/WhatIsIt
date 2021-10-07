@@ -16,7 +16,7 @@ import time
 
 class Game(object):
 	"""docstring for Game"""
-	def __init__(self, __version__, picture_list, pic_folder):
+	def __init__(self, __version__, picture_list):
 		#Initialize game window, etc
 		#set game screen placement
 		environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (COMX,COMY)
@@ -30,10 +30,10 @@ class Game(object):
 		pg.display.set_icon(self.logo)
 		pg.display.set_caption(f"{GAMENAME} Version {__version__}")
 		self.clock = pg.time.Clock()
-		
+
 		#Define game variables
 		self.picture_list = picture_list
-		self.picture_folder = pic_folder
+		# self.picture_folder = pic_folder
 		self.running = True
 		self.bg_pic_number = 0
 		self.iplist = []
@@ -47,23 +47,24 @@ class Game(object):
 
 	def load_data(self):
 		#Load all image graphics
-		self.bgpic_list = [pg.image.load(path.join(self.picture_folder, self.picture_list[x])) for x in range (len(self.picture_list))]
-		# self.bgpic_list = [pg.image.load(path.join(PIC_FOLDER, f"{self.picture_list[x]}.png")) for x in range (len(self.picture_list))]
+		# self.bgpic_list = [pg.image.load(self.picture_list[x]) for x in range (len(self.picture_list))]
 		self.sprite_sheet = Spritesheet(path.join(IMG_FOLDER, "What_is_it_game_images.png"))
 		#Load all games sounds
 		self.wrong_sound = pg.mixer.Sound(path.join(SOUND_FOLDER, "Wrong.wav"))
 		self.right_sound = pg.mixer.Sound(path.join(SOUND_FOLDER, "Right.wav"))
 
 	def create_random_number_list(self):
-		self.rand_num_list = [i for i in range(len(self.bgpic_list))]
+		self.rand_num_list = [i for i in range(len(self.picture_list))]
 		random.shuffle(self.rand_num_list)
 
 	def background_pic(self, bg_pic_number):
-		self.bgpic = self.bgpic_list[bg_pic_number]
+		self.bgpic = pg.image.load(self.picture_list[bg_pic_number]) 
+		# self.bgpic = self.bgpic_list[bg_pic_number]
 		self.bgpic_rect = self.bgpic.get_rect()
 		self.bgpic_scaled = pg.transform.scale(self.bgpic, (self.bgpic_rect.fit(self.win_rect)[2], self.bgpic_rect.fit(self.win_rect)[3]))
 		self.bgpic_scaled_rect = self.bgpic_scaled.get_rect()
 		self.bgpic_scaled_rect.centery = int(SCREENHEIGHT / 2)
+		self.bgpic_scaled_rect.centerx = int(SCREENWIDTH / 2)
 		print(f"{bg_pic_number + 1} {self.picture_list[bg_pic_number][:-4]}")
 
 	def create_picmobs(self):
@@ -148,7 +149,7 @@ class Game(object):
 					if event.key == pg.K_SPACE:
 						# self.bg_pic_number = random.randrange(start=1, stop=len(self.bgpic_list))
 						self.bg_pic_number +=1
-						if self.bg_pic_number >= len(self.bgpic_list):
+						if self.bg_pic_number >= len(self.picture_list):
 							self.bg_pic_number = 0
 						self.picmob_group.empty()
 						self.background_pic(bg_pic_number = self.rand_num_list[self.bg_pic_number])

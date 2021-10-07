@@ -29,7 +29,7 @@ MOVE_DELAY = 550
 GAME_FOLDER = path.dirname(__file__)
 IMG_FOLDER = path.join(GAME_FOLDER, 'img')
 SOUND_FOLDER = path.join(GAME_FOLDER, 'snd')
-PIC_FOLDER = path.join(IMG_FOLDER, "game_pics")
+#PIC_FOLDER = path.join(IMG_FOLDER, "game_pics")
 
 def dark_theme(app):
 	app.setStyle("Fusion")

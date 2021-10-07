@@ -21,9 +21,9 @@ class StartUpGui(QtWidgets.QWidget):
 
 	def initUI(self):
 		#Set up GUI
-		self.resize(180, 272)
-		self.setMinimumSize(180, 272)
-		self.setMaximumSize(180, 272)
+		self.resize(310, 208)
+		self.setMinimumSize(310, 208)
+		self.setMaximumSize(310, 208)
 		self.setWindowIcon(QtGui.QIcon("img/Ep_window_icon.ico"))
 		self.setWindowTitle("What is it?")
 
@@ -37,7 +37,7 @@ class StartUpGui(QtWidgets.QWidget):
 		bfont.setItalic(True)
 
 		self.EasyModeButton = QtWidgets.QPushButton(self)
-		self.EasyModeButton.setGeometry(10, 28, 160, 60)
+		self.EasyModeButton.setGeometry(10, 28, 140, 60)
 		# self.EasyModeButton.setFocusPolicy(QtCore.Qt.NoFocus)
 		self.EasyModeButton.setCheckable(True)
 		self.EasyModeButton.setChecked(True)
@@ -45,31 +45,37 @@ class StartUpGui(QtWidgets.QWidget):
 		self.EasyModeButton.setText("Easy Mode")
 
 		self.HardModeButton = QtWidgets.QPushButton(self)
-		self.HardModeButton.setGeometry(10, 98, 160, 60)
+		self.HardModeButton.setGeometry(160, 28, 140, 60)
 		# self.HardModeButton.setFocusPolicy(QtCore.Qt.NoFocus)
 		self.HardModeButton.setCheckable(True)
 		self.HardModeButton.setFont(bfont)
 		self.HardModeButton.setText("Hard Mode")
 
 		self.LoadImagesButton = QtWidgets.QPushButton(self)
-		self.LoadImagesButton.setGeometry(10, 168, 160, 60)
+		self.LoadImagesButton.setGeometry(10, 98, 140, 60)
 		# self.LoadImagesButton.setFocusPolicy(QtCore.Qt.NoFocus)
 		self.LoadImagesButton.setFont(bfont)
 		self.LoadImagesButton.setText("Load Images")
+
+		self.SelectFolderButton = QtWidgets.QPushButton(self)
+		self.SelectFolderButton.setGeometry(160, 98, 140, 60)
+		# self.SelectFolderButton.setFocusPolicy(QtCore.Qt.NoFocus)
+		self.SelectFolderButton.setFont(bfont)
+		self.SelectFolderButton.setText("Select Folder")
 
 		#Button for switchiong to darkmode
 		bfont.setPointSize(8)
 		bfont.setBold(False)
 		self.DarkModeButton = QtWidgets.QPushButton(self)
-		self.DarkModeButton.setGeometry(130, 4, 40, 20)
-		self.DarkModeButton.setFocusPolicy(QtCore.Qt.NoFocus)		
+		self.DarkModeButton.setGeometry(10, 4, 40, 20)
+		self.DarkModeButton.setFocusPolicy(QtCore.Qt.NoFocus)
 		self.DarkModeButton.setCheckable(True)
 		self.DarkModeButton.setFont(bfont)
 		self.DarkModeButton.setText("Dark")
 
 		#Button box setup for OKay and cancel buttons
 		self.StartGameButtonBox = QtWidgets.QDialogButtonBox(self)
-		self.StartGameButtonBox.setGeometry(12, 238, 156, 23)
+		self.StartGameButtonBox.setGeometry(142, 174, 156, 23)
 		self.StartGameButtonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Close|QtWidgets.QDialogButtonBox.Ok)
 
 	def tab_order(self):
@@ -135,7 +141,7 @@ class WrongAnswer(pg.sprite.Sprite):
 			self.rect = self.image.get_rect()
 			self.rect.centerx = SCREENWIDTH / 2
 			self.rect.centery = SCREENHEIGHT / 2
-		
+
 class RightAnswer(WrongAnswer):
 	"""Inherent class from WrongAnswer"""
 	def __init__(self):
@@ -159,8 +165,8 @@ class RightAnswer(WrongAnswer):
 			self.rect = self.image.get_rect()
 			self.rect.centerx = SCREENWIDTH / 2
 			self.rect.centery = SCREENHEIGHT / 2
-		
-#Runn Gui
+
+#Run Gui
 # if __name__ == '__main__':
 # 	app = QtWidgets.QApplication(sys.argv)
 # 	main_app = StartUpGui()
