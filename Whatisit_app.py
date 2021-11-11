@@ -16,7 +16,7 @@ import time
 
 class Game(object):
 	"""docstring for Game"""
-	def __init__(self, __version__, picture_list):
+	def __init__(self, __version__, picture_list, game_mode):
 		#Initialize game window, etc
 		#set game screen placement
 		environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (COMX,COMY)
@@ -33,11 +33,27 @@ class Game(object):
 
 		#Define game variables
 		self.picture_list = picture_list
-		# self.picture_folder = pic_folder
+		self.game_mode = game_mode
 		self.running = True
 		self.bg_pic_number = 0
 		self.iplist = []
 		self.chosen_numb = ""
+		#Set variables for creating numbermobs and setting highest number
+		if self.game_mode == "Easy":
+			self.size_pos = 77
+			self.across = 13
+			self.down = 9
+			self.max_num = 117
+		if self.game_mode == "Med":
+			self.size_pos = 59
+			self.across = 17
+			self.down = 12
+			self.max_num = 204
+		if self.game_mode == "Hard":
+			self.size_pos = 50
+			self.across = 20
+			self.down = 14
+			self.max_num = 280
 
 		# self.read_piclist()
 		self.load_data()
@@ -47,8 +63,7 @@ class Game(object):
 
 	def load_data(self):
 		#Load all image graphics
-		# self.bgpic_list = [pg.image.load(self.picture_list[x]) for x in range (len(self.picture_list))]
-		self.sprite_sheet = Spritesheet(path.join(IMG_FOLDER, "What_is_it_game_images.png"))
+		self.sprite_sheet = Spritesheet(path.join(IMG_FOLDER, f"{self.game_mode}_mode_image.png"))
 		#Load all games sounds
 		self.wrong_sound = pg.mixer.Sound(path.join(SOUND_FOLDER, "Wrong.wav"))
 		self.right_sound = pg.mixer.Sound(path.join(SOUND_FOLDER, "Right.wav"))
@@ -58,8 +73,7 @@ class Game(object):
 		random.shuffle(self.rand_num_list)
 
 	def background_pic(self, bg_pic_number):
-		self.bgpic = pg.image.load(self.picture_list[bg_pic_number]) 
-		# self.bgpic = self.bgpic_list[bg_pic_number]
+		self.bgpic = pg.image.load(self.picture_list[bg_pic_number]).convert() 
 		self.bgpic_rect = self.bgpic.get_rect()
 		self.bgpic_scaled = pg.transform.scale(self.bgpic, (self.bgpic_rect.fit(self.win_rect)[2], self.bgpic_rect.fit(self.win_rect)[3]))
 		self.bgpic_scaled_rect = self.bgpic_scaled.get_rect()
@@ -69,25 +83,18 @@ class Game(object):
 
 	def create_picmobs(self):
 		self.picmob_list = []
-		for i in range(14): #Normally 14
-			for x in range(20):
-				self.picmob = NumberMobs(spritesheet = self.sprite_sheet, xpos = 50* x, ypos = 50* i, img = x + (i * 20))
+
+		for i in range(self.down): #Normally 12/ 14
+			for x in range(self.across):
+				self.picmob = NumberMobs(spritesheet = self.sprite_sheet, xpos = self.size_pos* x, ypos = self.size_pos* i, width= self.size_pos, height= self.size_pos)
 				self.picmob_group.add(self.picmob)
 				self.picmob_list.append(self.picmob)
-
-	def read_piclist(self):
-		#Prints out a list of pictures from the list to the console
-		self.picture_list = []
-		with open("picture_list.txt" ,"r") as file:
-			for line in file:
-				self.picture_list.append(line[:-1])
-				print(line[:-1])
 
 	def choose_number(self):
 		for item in self.iplist:
 			self.chosen_numb += item
 		try:
-			if int(self.chosen_numb) >= 1 and int(self.chosen_numb) <= 280:
+			if int(self.chosen_numb) >= 1 and int(self.chosen_numb) <= self.max_num:
 				#remove the sprite
 				self.picmob_list[int(self.chosen_numb) - 1].kill()
 		except ValueError:
@@ -97,11 +104,9 @@ class Game(object):
 
 	def new(self, gui):
 		#Start a new game
-		# self.show_start_screen()
 		self.answer_sprites = pg.sprite.Group()
 		self.picmob_group = pg.sprite.Group()
 		self.create_picmobs()
-		# print(time.strftime("%M Minuets %S Seconds"))
 		gui.hide()
 
 		self.run()
@@ -132,22 +137,9 @@ class Game(object):
 						self.running = False
 				if event.key == pg.K_KP_ENTER or event.key == pg.K_RETURN:
 					self.choose_number()
-				# if event.key == pg.K_UP:
-				# 	self.bg_pic_number +=1
-				# 	if self.bg_pic_number > len(self.bgpic_list) - 1:
-				# 		self.bg_pic_number = 0
-				# 	self.background_pic(bg_pic_number = self.bg_pic_number)
-				# 	self.iplist.clear()
-				# if event.key == pg.K_DOWN:
-				# 	self.bg_pic_number -=1
-				# 	if self.bg_pic_number < 0:
-				# 		self.bg_pic_number = len(self.bgpic_list) - 1
-				# 	self.background_pic(bg_pic_number = self.bg_pic_number)
-				# 	self.iplist.clear()
 					
 				if len(self.picmob_group) < 280: #Stops reveal if no numbers have been chosen
 					if event.key == pg.K_SPACE:
-						# self.bg_pic_number = random.randrange(start=1, stop=len(self.bgpic_list))
 						self.bg_pic_number +=1
 						if self.bg_pic_number >= len(self.picture_list):
 							self.bg_pic_number = 0
@@ -157,7 +149,7 @@ class Game(object):
 						self.iplist.clear()
 					if event.key == pg.K_y:
 						#Correct answer function
-						self.right_pic = RightAnswer()
+						self.right_pic = RightAnswer(game_mode= self.game_mode)
 						self.answer_sprites.add(self.right_pic)
 						self.right_sound.play()
 						self.picmob_group.empty()
@@ -176,15 +168,6 @@ class Game(object):
 		self.picmob_group.draw(self.win)
 		self.answer_sprites.draw(self.win)
 		pg.display.update()
-
-	def show_start_screen(self):
-		#Game start screen
-		pass
-
-	def show_go_screen(self):
-		#Game over/continue screen
-		pass
-
 
 # g = Game()
 

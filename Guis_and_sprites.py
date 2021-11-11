@@ -9,12 +9,10 @@ WHAT IS IT APP LAUNCHER developed by Mr Steven J walden
 #Gui's and Sprite classes for game 
 import sys
 from PyQt5 import QtWidgets, QtGui, QtCore
-#from PyQt5.QtWidgets import QWidget
 import pygame as pg
 from methods import *
 
 class StartUpGui(QtWidgets.QWidget):
-	"""docstrbing for MyApp"""
 	def __init__(self, parent=None):
 		super(StartUpGui, self).__init__(parent)
 		self.initUI()
@@ -37,29 +35,31 @@ class StartUpGui(QtWidgets.QWidget):
 		bfont.setItalic(True)
 
 		self.EasyModeButton = QtWidgets.QPushButton(self)
-		self.EasyModeButton.setGeometry(10, 28, 140, 60)
-		# self.EasyModeButton.setFocusPolicy(QtCore.Qt.NoFocus)
+		self.EasyModeButton.setGeometry(10, 28, 90, 60)
 		self.EasyModeButton.setCheckable(True)
 		self.EasyModeButton.setChecked(True)
 		self.EasyModeButton.setFont(bfont)
-		self.EasyModeButton.setText("Easy Mode")
+		self.EasyModeButton.setText("Easy\nMode")
+
+		self.MediumModeButton = QtWidgets.QPushButton(self)
+		self.MediumModeButton.setGeometry(110, 28, 90, 60)
+		self.MediumModeButton.setCheckable(True)
+		self.MediumModeButton.setFont(bfont)
+		self.MediumModeButton.setText("Medium\nMode")
 
 		self.HardModeButton = QtWidgets.QPushButton(self)
-		self.HardModeButton.setGeometry(160, 28, 140, 60)
-		# self.HardModeButton.setFocusPolicy(QtCore.Qt.NoFocus)
+		self.HardModeButton.setGeometry(210, 28, 90, 60)
 		self.HardModeButton.setCheckable(True)
 		self.HardModeButton.setFont(bfont)
-		self.HardModeButton.setText("Hard Mode")
+		self.HardModeButton.setText("Hard\nMode")
 
 		self.LoadImagesButton = QtWidgets.QPushButton(self)
 		self.LoadImagesButton.setGeometry(10, 98, 140, 60)
-		# self.LoadImagesButton.setFocusPolicy(QtCore.Qt.NoFocus)
 		self.LoadImagesButton.setFont(bfont)
 		self.LoadImagesButton.setText("Load Images")
 
 		self.SelectFolderButton = QtWidgets.QPushButton(self)
 		self.SelectFolderButton.setGeometry(160, 98, 140, 60)
-		# self.SelectFolderButton.setFocusPolicy(QtCore.Qt.NoFocus)
 		self.SelectFolderButton.setFont(bfont)
 		self.SelectFolderButton.setText("Select Folder")
 
@@ -79,9 +79,9 @@ class StartUpGui(QtWidgets.QWidget):
 		self.StartGameButtonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Close|QtWidgets.QDialogButtonBox.Ok)
 
 	def tab_order(self):
-		self.setTabOrder(self.EasyModeButton, self.HardModeButton)
+		self.setTabOrder(self.EasyModeButton, self.MediumModeButton)
 		self.setTabOrder(self.HardModeButton, self.LoadImagesButton)
-		self.setTabOrder(self.StartGameButtonBox, self.EasyModeButton)
+		self.setTabOrder(self.SelectFolderButton, self.StartGameButtonBox)
 
 class Spritesheet:
 	def __init__(self, filename):
@@ -94,32 +94,18 @@ class Spritesheet:
 		return image
 
 class NumberMobs(pg.sprite.Sprite):
-	def __init__(self, spritesheet, xpos, ypos, img):
+	def __init__(self, spritesheet, xpos, ypos, width, height):
 		pg.sprite.Sprite.__init__(self)
-		#self.game = game
 		self.sprite_sheet = spritesheet
-		self.load_images()
-		self.image = self.number_mobs[img]
-		# self.image = pg.Surface((50,50))
-		# self.image.fill(colour)
+		self.image = self.sprite_sheet.get_image(xpos, ypos, width, height)
 		self.rect = self.image.get_rect()
 		self.rect.x = xpos
 		self.rect.y = ypos
-
-	def update(self):
-		pass
-
-	def load_images(self):
-		self.number_mobs = []
-		for y in range (14):
-			for x in range(20):
-				self.number_mobs.append(self.sprite_sheet.get_image(x * 50, y * 50, 50, 50))
 
 class WrongAnswer(pg.sprite.Sprite):
 	"""docstring for WrongAnswer"""
 	def __init__(self):
 		pg.sprite.Sprite.__init__(self)
-		# self.game = game
 		self.img_num = 1
 		self.image = pg.image.load(path.join(IMG_FOLDER, f"Wrong{self.img_num}.png")).convert_alpha()
 		self.rect = self.image.get_rect()
@@ -144,27 +130,30 @@ class WrongAnswer(pg.sprite.Sprite):
 
 class RightAnswer(WrongAnswer):
 	"""Inherent class from WrongAnswer"""
-	def __init__(self):
+	def __init__(self, game_mode):
 		super(RightAnswer, self).__init__()
-		self.image = pg.image.load(path.join(IMG_FOLDER, f"Right{self.img_num}.png")).convert_alpha()
+		self.game_mode = game_mode
+		self.image = pg.image.load(path.join(IMG_FOLDER, f"{self.game_mode}_mode_image.png")).convert()
 		self.rect = self.image.get_rect()
 		self.rect.centerx = SCREENWIDTH / 2
 		self.rect.centery = SCREENHEIGHT / 2
 		self.frame_rate = 100
+		self.alpha_num = 255
 
 	def update(self):
-		#Change image
+		#Change image alpha
 		img_now = pg.time.get_ticks()
 		if img_now - self.img_last_update >= self.frame_rate:
 			self.img_last_update = img_now
-			self.img_num += 1
-			if self.img_num > 19:
-				self.img_num = 19
+			self.alpha_num -= 12
+			if self.alpha_num < 10:
+				self.alpha_num = 10
 				self.kill()
-			self.image = pg.image.load(path.join(IMG_FOLDER, f"Right{self.img_num}.png")).convert_alpha()
+			self.image.set_alpha(self.alpha_num)
 			self.rect = self.image.get_rect()
 			self.rect.centerx = SCREENWIDTH / 2
 			self.rect.centery = SCREENHEIGHT / 2
+
 
 #Run Gui
 # if __name__ == '__main__':
