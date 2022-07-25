@@ -5,18 +5,27 @@ WHAT IS IT APPLICATION developed by Mr Steven J walden
 [See License.txt file]
 This is the main application/game launched from the GUI
 '''
-from os import path ,environ
 import pygame as pg
 import random
-from methods import *
-from Guis_and_sprites import NumberMobs, Spritesheet, WrongAnswer, RightAnswer
+import logging
 import time
-
+from methods import *
+from os import path ,environ
+from Guis_and_sprites import NumberMobs, Spritesheet, WrongAnswer, RightAnswer
 
 
 class Game(object):
 	"""docstring for Game"""
 	def __init__(self, __version__, picture_list, game_mode):
+		#setup logger
+		self.logger = logging.getLogger(__name__)
+		self.logger.setLevel(logging.DEBUG)
+		self.formatter = logging.Formatter('%(asctime)s:%(name)s:%(message)s')
+		self.file_handler = logging.FileHandler('Error_Log')
+		# self.file_handler.setLevel(logging.ERROR)
+		self.file_handler.setFormatter(self.formatter)
+		self.logger.addHandler(self.file_handler)
+
 		#Initialize game window, etc
 		#set game screen placement
 		environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (COMX,COMY)
@@ -73,7 +82,16 @@ class Game(object):
 		random.shuffle(self.rand_num_list)
 
 	def background_pic(self, bg_pic_number):
-		self.bgpic = pg.image.load(self.picture_list[bg_pic_number]).convert() 
+		#insert try and except here
+		try:
+			self.bgpic = pg.image.load(self.picture_list[bg_pic_number]).convert()
+		except Exception as e:
+			self.logger.error(str(e))
+			self.bg_pic_number += 1
+			if self.bg_pic_number >= len(self.picture_list):
+				self.bg_pic_number = 0
+			self.bgpic = pg.image.load(self.picture_list[bg_pic_number]).convert()
+
 		self.bgpic_rect = self.bgpic.get_rect()
 		self.bgpic_scaled = pg.transform.scale(self.bgpic, (self.bgpic_rect.fit(self.win_rect)[2], self.bgpic_rect.fit(self.win_rect)[3]))
 		self.bgpic_scaled_rect = self.bgpic_scaled.get_rect()
@@ -164,7 +182,16 @@ class Game(object):
 	def draw(self):
 		#Game loop - draw
 		self.win.fill(BLACK)
-		self.win.blit(self.bgpic_scaled, (self.bgpic_scaled_rect.x, self.bgpic_scaled_rect.y))
+		try:
+			self.win.blit(self.bgpic_scaled, (self.bgpic_scaled_rect.x, self.bgpic_scaled_rect.y))
+		except Exception as e:
+			self.logger.error(str(e))
+			self.bg_pic_number += 1
+			if self.bg_pic_number >= len(self.picture_list):
+				self.bg_pic_number = 0
+			self.background_pic(bg_pic_number=self.rand_num_list[self.bg_pic_number])
+			self.win.blit(self.bgpic_scaled, (self.bgpic_scaled_rect.x, self.bgpic_scaled_rect.y))
+
 		self.picmob_group.draw(self.win)
 		self.answer_sprites.draw(self.win)
 		pg.display.update()

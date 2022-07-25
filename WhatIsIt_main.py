@@ -1,6 +1,6 @@
 '''
 WHAT IS IT APP LAUNCHER developed by Mr Steven J walden
-    Sept. 2020
+    July. 2022
     SAMROIYOD, PRACHUAP KIRI KHAN, THAILAND
 [See License.txt file]
 '''
@@ -22,7 +22,7 @@ from Whatisit_app import *
 
 
 __author__ = 'Mr Steven J Walden'
-__version__ = '1.5.0'
+__version__ = '1.6.0'
 
 class Main_Gui():
 	def __init__(self):
@@ -81,7 +81,7 @@ class Main_Gui():
 			for x in range (len(self.my_files[0])):
 				self.picture_list.append(self.my_files[0][x])
 		except FileNotFoundError:
-			#Stops crash if no folder selected
+			#Stops crash if no image selected
 			pass
 
 	def select_folder_button_clicked(self):
@@ -105,7 +105,7 @@ class Main_Gui():
 		if self.ui.EasyModeButton.isChecked():
 			self.game_mode = "Easy"
 		if len(self.picture_list) > 0:
-			#creat an instance of the main game app
+			#create an instance of the main game app
 			self.game_app = Game(__version__, self.picture_list, self.game_mode)
 
 			while self.game_app.running:
