@@ -1,7 +1,7 @@
 # WhatIsIt
-WhatIsIt Application Version 1.0.0
+WhatIsIt Application Version 1.6.0
 
-Copyright (C) 2020 Steven J Walden.
+Copyright (C) 2022  Mr Steven J Walden.
 All rights reserved.
 See license at end of file
 
@@ -26,7 +26,7 @@ Exam App can display and manage examinations on a multiple choice basis utilizin
 1.2 What Does Exam App Do?
 -------------------------
 
-Exam App will display inputed questions and answers. managing a score under a time constraint defined by the administrator.
+Exam App will display imputed questions and answers. managing a score under a time constraint defined by the administrator.
 It features the ability to be able to display both video and photo images for any question related to the exam.
 Both the amount of questions and well as the duration of the exam are selectable from the exam set up GUI. 
 
@@ -46,7 +46,7 @@ Installation:
 1.4 License information
 ----------------------
 
-Copyright (c) 2020 Steven Walden
+Copyright (c) 2022 Steven Walden
 
 -THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,

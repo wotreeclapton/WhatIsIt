@@ -86,7 +86,7 @@ class Game(object):
 		try:
 			self.bgpic = pg.image.load(self.picture_list[bg_pic_number]).convert()
 		except Exception as e:
-			self.logger.error(str(e))
+			self.logger.error(f"{str(e)} at line 87 image load")
 			self.bg_pic_number += 1
 			if self.bg_pic_number >= len(self.picture_list):
 				self.bg_pic_number = 0
