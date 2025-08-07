@@ -12,7 +12,7 @@ import sys
 import os
 from os.path import expanduser
 import pygame as pg
-from what_is_it.sprites import StartUpGui
+from what_is_it.start_gui import StartUpGui
 from what_is_it.methods import dark_theme, light_theme
 from what_is_it.game_screen import Game
 import what_is_it.constants as const

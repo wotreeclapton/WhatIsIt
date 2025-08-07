@@ -6,7 +6,7 @@ WHAT IS IT APP LAUNCHER - Entry point
 [See License.txt file]
 '''
 
-from what_is_it.main import Main_Gui
+from what_is_it.main_gui import Main_Gui
 import what_is_it.constants as const
 
 
