@@ -7,10 +7,10 @@ WHAT IS IT APP LAUNCHER developed by Mr Steven J walden
 '''
 
 #Gui's and Sprite classes for game 
-import sys
 from PyQt5 import QtWidgets, QtGui, QtCore
+from os import path
 import pygame as pg
-from methods import *
+import constants as const
 
 class StartUpGui(QtWidgets.QWidget):
 	def __init__(self, parent=None):
@@ -22,8 +22,8 @@ class StartUpGui(QtWidgets.QWidget):
 		self.resize(310, 208)
 		self.setMinimumSize(310, 208)
 		self.setMaximumSize(310, 208)
-		self.setWindowIcon(QtGui.QIcon("img/Ep_window_icon.ico"))
-		self.setWindowTitle("What is it?")
+		self.setWindowIcon(QtGui.QIcon(f"{const.IMG_FOLDER}/Ep_window_icon.ico"))
+		self.setWindowTitle(const.GAMENAME)
 
 		self.add_buttons()
 		self.tab_order()
@@ -63,6 +63,12 @@ class StartUpGui(QtWidgets.QWidget):
 		self.SelectFolderButton.setFont(bfont)
 		self.SelectFolderButton.setText("Select Folder")
 
+		# Group for difficulty buttons to ensure mutual exclusivity
+		self.difficulty_button_group = QtWidgets.QButtonGroup(self)
+		self.difficulty_button_group.addButton(self.EasyModeButton)
+		self.difficulty_button_group.addButton(self.MediumModeButton)
+		self.difficulty_button_group.addButton(self.HardModeButton)
+
 		#Button for switchiong to darkmode
 		bfont.setPointSize(8)
 		bfont.setBold(False)
@@ -85,7 +91,10 @@ class StartUpGui(QtWidgets.QWidget):
 
 class Spritesheet:
 	def __init__(self, filename):
-		self.spritesheet = pg.image.load(filename).convert_alpha()
+		try:
+			self.spritesheet = pg.image.load(filename).convert_alpha()
+		except Exception as e:
+			print(f"Error loading spritesheet {filename}: {e}")
 
 	def get_image(self, x, y, width, height):
 		#Grab an image from the sheet
@@ -98,19 +107,20 @@ class NumberMobs(pg.sprite.Sprite):
 		pg.sprite.Sprite.__init__(self)
 		self.sprite_sheet = spritesheet
 		self.image = self.sprite_sheet.get_image(xpos, ypos, width, height)
-		self.rect = self.image.get_rect()
+		self.rect = self.image.get_rect(topleft=(xpos, ypos))
 		self.rect.x = xpos
 		self.rect.y = ypos
 
 class WrongAnswer(pg.sprite.Sprite):
-	"""docstring for WrongAnswer"""
-	def __init__(self):
+	"""Sprite for displaying a 'Wrong Answer' animation sequence."""
+	def __init__(self, game):
 		pg.sprite.Sprite.__init__(self)
+		self.game = game
 		self.img_num = 1
-		self.image = pg.image.load(path.join(IMG_FOLDER, f"Wrong{self.img_num}.png")).convert_alpha()
+		self.image = self.game.resource_manager.get_image("wrong1")
 		self.rect = self.image.get_rect()
-		self.rect.centerx = SCREENWIDTH / 2
-		self.rect.centery = SCREENHEIGHT / 2
+		self.rect.centerx = const.SCREENWIDTH / 2
+		self.rect.centery = const.SCREENHEIGHT / 2
 		self.frame_rate = 100
 		self.img_last_update = pg.time.get_ticks()
 
@@ -123,20 +133,20 @@ class WrongAnswer(pg.sprite.Sprite):
 			if self.img_num > 13:
 				self.img_num = 13
 				self.kill()
-			self.image = pg.image.load(path.join(IMG_FOLDER, f"Wrong{self.img_num}.png")).convert_alpha()
+			self.image = self.game.resource_manager.get_image(f"wrong{self.img_num}")
 			self.rect = self.image.get_rect()
-			self.rect.centerx = SCREENWIDTH / 2
-			self.rect.centery = SCREENHEIGHT / 2
+			self.rect.centerx = const.SCREENWIDTH / 2
+			self.rect.centery = const.SCREENHEIGHT / 2
 
 class RightAnswer(WrongAnswer):
 	"""Inherent class from WrongAnswer"""
-	def __init__(self, game_mode):
-		super(RightAnswer, self).__init__()
+	def __init__(self, game, game_mode):
+		super(RightAnswer, self).__init__(game)
 		self.game_mode = game_mode
-		self.image = pg.image.load(path.join(IMG_FOLDER, f"{self.game_mode}_mode_image.png")).convert()
+		self.image = pg.image.load(path.join(const.IMG_FOLDER, f"{self.game_mode}_mode_image.png")).convert()
 		self.rect = self.image.get_rect()
-		self.rect.centerx = SCREENWIDTH / 2
-		self.rect.centery = SCREENHEIGHT / 2
+		self.rect.centerx = const.SCREENWIDTH / 2
+		self.rect.centery = const.SCREENHEIGHT / 2
 		self.frame_rate = 100
 		self.alpha_num = 255
 
@@ -151,8 +161,8 @@ class RightAnswer(WrongAnswer):
 				self.kill()
 			self.image.set_alpha(self.alpha_num)
 			self.rect = self.image.get_rect()
-			self.rect.centerx = SCREENWIDTH / 2
-			self.rect.centery = SCREENHEIGHT / 2
+			self.rect.centerx = const.SCREENWIDTH / 2
+			self.rect.centery = const.SCREENHEIGHT / 2
 
 
 #Run Gui

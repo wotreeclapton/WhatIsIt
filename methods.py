@@ -1,35 +1,15 @@
-#Game option/settings
-from os import path
+'''
+WHAT IS IT APP METHODS developed by Mr Steven J walden
+    May. 2025
+    SAMROIYOD, PRACHUAP KIRI KHAN, THAILAND
+[See License.txt file]
+'''
 
 from PyQt5 import QtCore
 from PyQt5.QtGui import QPalette, QColor
 from PyQt5.QtCore import Qt
+from guis_and_sprites import NumberMobs
 
-GAMENAME = "What Is It App"
-
-COMX = 380
-COMY = 85
-SCREENWIDTH = 1000
-SCREENHEIGHT = 700
-FPS = 60
-
-#Colours
-WHITE = (255,255,255)
-BLACK = (0,0,0)
-RED =(255,0,0)
-GREEN = (0,255,0)
-BLUE = (0,0,255)
-YELLOW = (255,255,0)
-PURPLE = (128,0,128)
-
-POWERUP_TIME = 10000
-MOVE_DELAY = 550
-
-#set up game folders
-GAME_FOLDER = path.dirname(__file__)
-IMG_FOLDER = path.join(GAME_FOLDER, 'img')
-SOUND_FOLDER = path.join(GAME_FOLDER, 'snd')
-#PIC_FOLDER = path.join(IMG_FOLDER, "game_pics")
 
 def dark_theme(app):
 	app.setStyle("Fusion")
@@ -55,6 +35,7 @@ def dark_theme(app):
 	app.setStyleSheet("QToolTip { color: #ffffff; background-color: #2a82da; border: 1px solid white; }")
 
 def light_theme(app):
+
 	app.setStyle("Fusion")
 
 	light_palette = QPalette()
@@ -76,3 +57,46 @@ def light_theme(app):
 	app.setPalette(light_palette)
 
 	app.setStyleSheet("QToolTip { color: #706b67; background-color: #fffefa; border: 1px solid grey; }")
+
+def create_picmobs(game, game_mode):
+	picmob_list = []
+
+	# Set variables for creating numbermobs and setting highest number
+	if game_mode == "Easy":
+			size_pos = 77
+			across = 13
+			down = 9
+			max_num = 117
+	elif game_mode == "Medium":
+		size_pos = 59
+		across = 17
+		down = 12
+		max_num = 204
+	elif game_mode == "Hard":
+		size_pos = 50
+		across = 20
+		down = 14
+		max_num = 280
+	else:
+		return [], 0
+
+	for i in range(down):  # Normally 12/ 14
+		for x in range(across):
+			picmob = NumberMobs(spritesheet=game.resource_manager.get_image(f"{game_mode}_spritesheet"), xpos=size_pos * x,
+										ypos=size_pos * i, width=size_pos, height=size_pos)
+			game.picmob_group.add(picmob)
+			picmob_list.append(picmob)
+	return picmob_list, max_num
+
+# def choose_number():
+# 	for item in self.iplist:
+# 		self.chosen_numb += item
+# 	try:
+# 		if int(self.chosen_numb) >= 1 and int(self.chosen_numb) <= self.max_num:
+# 			# remove the sprite
+# 			self.picmob_list[int(self.chosen_numb) - 1].kill()
+# 	except ValueError:
+# 		pass
+# 	self.chosen_numb = ""
+# 	self.iplist.clear()
+
